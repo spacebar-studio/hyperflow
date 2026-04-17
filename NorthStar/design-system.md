@@ -1,6 +1,6 @@
-# HyperFlow Design System — NorthStar v2
+# HyperFlow Design System
 
-A comprehensive design system extracted from the HyperFlow NorthStar v2 application. This document defines every visual token, component, motion pattern, and usage rule governing the product experience.
+A comprehensive design system for the HyperFlow application. This document defines every visual token, component, motion pattern, and usage rule governing the product experience.
 
 ---
 
@@ -17,11 +17,14 @@ A comprehensive design system extracted from the HyperFlow NorthStar v2 applicat
 9. [Token Naming](#token-naming)
 10. [Component Library](#component-library)
 11. [Data Visualization](#data-visualization)
-12. [Motion Design](#motion-design)
-13. [Layout Patterns](#layout-patterns)
-14. [Usage Rules](#usage-rules)
-15. [Do's & Don'ts](#dos--donts)
-16. [Accessibility](#accessibility)
+12. [Copilot Card](#copilot-card)
+13. [Detail Panel](#detail-panel)
+14. [Motion Design](#motion-design)
+15. [Layout Patterns](#layout-patterns)
+16. [Data Hierarchy](#data-hierarchy)
+17. [Usage Rules](#usage-rules)
+18. [Do's & Don'ts](#dos--donts)
+19. [Accessibility](#accessibility)
 
 ---
 
@@ -652,6 +655,92 @@ Team adoption views pair an Avatar component with a horizontal bar:
 
 ---
 
+## Copilot Card
+
+AI recommendation card used in the Copilot sidebar panel. Contains severity badge, title, description, expandable reasoning, and action buttons.
+
+### Severity Variants
+
+| Severity | Border Color          | Badge Type  |
+|----------|-----------------------|-------------|
+| Critical | `C.rd` + 30% opacity  | `critical`  |
+| Warning  | `C.acD`               | `warning`   |
+| Info     | `C.acD`               | `info`      |
+
+### Anatomy
+
+```
+Container: Card with severity-tinted border
+Header:    Badge (severity) + Title (12px/600)
+Body:      Description (11px, C.t2, line-height 1.5)
+Reasoning: details/summary pattern
+  Summary: 10px, C.tl, clickable
+  Content: 11px, C.t3, left border 2px C.acD
+Actions:   Btn sm primary (Apply) + Btn sm (Simulate)
+```
+
+### Panel Specs
+
+```
+Width: 300px (fixed, right-aligned)
+Background: C.s1
+Border: 1px solid C.bd (left edge)
+Padding: 16px 14px
+Header: ✦ icon + "Copilot" label (13px/600)
+Cards stack vertically with 8px gap
+```
+
+---
+
+## Detail Panel
+
+Full-width detail view for drill-down navigation. Replaces the current screen content with a back button, title, and contextual data.
+
+### Navigation
+
+- `goD(type, data)` opens a detail view
+- `back()` returns to the previous screen
+- Detail replaces screen content (not a modal overlay)
+
+### Layout Structure
+
+```
+┌─────────────────────────────────────────┐
+│ [← Back]  Detail Title                  │
+│ [Badge] [Badge] [Badge]                 │
+│                                         │
+│ ┌─────┐ ┌─────┐ ┌─────┐               │
+│ │ KPI │ │ KPI │ │ KPI │               │
+│ └─────┘ └─────┘ └─────┘               │
+│                                         │
+│ ┃ Left-accent content block             │
+│ ┃ Key information with 3px C.tl border  │
+└─────────────────────────────────────────┘
+```
+
+### Detail Types
+
+| Type     | Content                                        |
+|----------|------------------------------------------------|
+| Flow     | Activity timeline with badges, KPIs, stakeholders |
+| Session  | Instructions, time estimate, tips, completion  |
+| Config   | Connection status, sync settings, field mapping |
+| Member   | Adoption grid, streaks, coaching actions        |
+| Report   | Metrics, charts, trend analysis                |
+| Generic  | Flexible key-value fields layout               |
+
+### Specs
+
+```
+Back button: top-left, sm size
+Title: 16-18px, fontWeight 600
+Badges: row of status indicators below title
+KPIs: row of 3-4 contextual metrics
+Content: left-accent border (3px C.tl) for key info
+```
+
+---
+
 ## Motion Design
 
 ### CSS Transitions
@@ -729,6 +818,89 @@ Used in: Process, Overview, Docs, Field Notes.
 | `1fr 1fr`         | Business outcomes, KPIs   |
 | `1fr 1fr 1fr`     | Tech stack, shadows       |
 | `repeat(7, 1fr)` | Information architecture  |
+
+---
+
+## Data Hierarchy
+
+HyperFlow uses a four-level progressive disclosure pattern. Each level reveals more detail on demand, preventing information overload while keeping depth accessible.
+
+### Level 1 — KPI Summary
+
+The highest-level view. Scannable metric cards showing aggregated numbers with trend indicators.
+
+```
+┌────────────┐  ┌────────────┐  ┌────────────┐
+│ ACTIVE FLOWS│  │  ADOPTION  │  │  AI ACTIONS │
+│     12      │  │    87%     │  │    340/wk   │
+│  ▲ 3 this wk│  │  ▲ 5% MoM │  │  steady     │
+└────────────┘  └────────────┘  └────────────┘
+```
+
+**Specs:** KPI component in rows of 3-4, `background: C.s1`, click triggers drill-down to Level 2.
+
+### Level 2 — Card List
+
+Mid-level view showing individual items with status badges, brief metadata, and click targets.
+
+```
+┌──────────────────────────────────────────┐
+│ [Badge: LIVE]  Onboarding Flow           │
+│ 24 sessions  •  Last run 2h ago          │
+│ ████████████████████░░░  87%             │
+└──────────────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│ [Badge: PREP]  Quarterly Review Flow     │
+│ 8 sessions  •  Scheduled Thu             │
+│ ████████░░░░░░░░░░░░░░  42%             │
+└──────────────────────────────────────────┘
+```
+
+**Specs:** Card component with `anim` prop, badges for status, horizontal bar for progress. Click triggers drill-down to Level 3.
+
+### Level 3 — Detail View
+
+Full-width panel replacing screen content. Shows back navigation, contextual KPIs, timeline, and content blocks.
+
+```
+┌─────────────────────────────────────────┐
+│ [← Back]  Onboarding Flow               │
+│ [LIVE] [24 sessions] [87% adoption]     │
+│                                         │
+│ ┌─────┐ ┌─────┐ ┌─────┐               │
+│ │ KPI │ │ KPI │ │ KPI │               │
+│ └─────┘ └─────┘ └─────┘               │
+│                                         │
+│ ┃ Activity timeline with entries        │
+│ ┃ Stakeholder list, next steps          │
+└─────────────────────────────────────────┘
+```
+
+**Specs:** `goD(type, data)` / `back()` navigation. Left-accent border (`3px C.tl`) for key content. GenD renders flexible key-value fields.
+
+### Level 4 — Copilot
+
+AI-powered contextual recommendations surfaced alongside detail views. The Copilot panel appears as a right sidebar offering actions based on the current context.
+
+```
+┌───────────────────────┬──────────┐
+│   Detail View         │ ✦ Copilot│
+│   (Level 3 content)   │ [Card 1] │
+│                       │ [Card 2] │
+│                       │ [Card 3] │
+└───────────────────────┴──────────┘
+```
+
+**Specs:** Fixed 300px right panel, `background: C.s1`, cards stack with 8px gap. Each card has severity badge, reasoning toggle, and action buttons (Apply / Simulate).
+
+### Transition Pattern
+
+| From → To         | Trigger        | Animation                    |
+|--------------------|----------------|------------------------------|
+| Level 1 → Level 2 | Click KPI      | `.fu` fade-up on card list   |
+| Level 2 → Level 3 | Click Card     | Screen replacement, `.fu`    |
+| Level 3 → Level 2 | Click ← Back   | Immediate (no exit animation)|
+| Level 3 + Level 4 | Context-aware  | Panel slides in from right   |
 
 ---
 
@@ -868,4 +1040,4 @@ Per-component guidance for consistent implementation across all screens.
 
 ---
 
-*Generated from HyperFlow NorthStar v2 — April 2026*
+*HyperFlow Design System — April 2026*
