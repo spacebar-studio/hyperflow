@@ -13,11 +13,15 @@ A comprehensive design system extracted from the HyperFlow NorthStar v2 applicat
 5. [Border Radius](#border-radius)
 6. [Shadows](#shadows)
 7. [Gradients](#gradients)
-8. [Component Library](#component-library)
-9. [Motion Design](#motion-design)
-10. [Layout Patterns](#layout-patterns)
-11. [Usage Rules](#usage-rules)
-12. [Accessibility](#accessibility)
+8. [Iconography](#iconography)
+9. [Token Naming](#token-naming)
+10. [Component Library](#component-library)
+11. [Data Visualization](#data-visualization)
+12. [Motion Design](#motion-design)
+13. [Layout Patterns](#layout-patterns)
+14. [Usage Rules](#usage-rules)
+15. [Do's & Don'ts](#dos--donts)
+16. [Accessibility](#accessibility)
 
 ---
 
@@ -223,6 +227,86 @@ background: linear-gradient(135deg,
 ```
 
 **Usage:** Page backgrounds (Process, Overview), focus mode, accent card surfaces.
+
+---
+
+## Iconography
+
+HyperFlow uses Unicode symbols instead of an icon library for maximum performance and zero dependencies.
+
+### Navigation Icons
+
+| Symbol | Unicode  | Section          | Screens |
+|--------|----------|------------------|---------|
+| ◷      | U+25F7   | Command Center   | 2       |
+| ✉      | U+2709   | Mail             | 2       |
+| ≡      | U+2261   | Workflows        | 3       |
+| ◆      | U+25C6   | Activation       | 2       |
+| ▥      | U+25A5   | Analytics        | 2       |
+| ⊞      | U+229E   | Team             | 2       |
+| ⚙      | U+2699   | Settings         | 2       |
+
+### Status Indicators
+
+| State               | Visual                      | Usage                           |
+|----------------------|-----------------------------|---------------------------------|
+| Active / Live        | Filled green circle         | Success badge, live systems     |
+| Attention / Warning  | Filled amber circle         | Items needing prep or review    |
+| Critical / Urgent    | Filled red circle           | Overdue, deal-breaking issues   |
+| Inactive / Muted     | Filled gray circle          | Neutral, disabled states        |
+| Syncing              | Pulsing lavender dot (`tw`) | Background sync in progress     |
+
+### Priority & Unread Markers
+
+- **Unread dot:** 6px circle, `C.ac` lavender, placed right-aligned in inbox rows
+- **Priority PREP badge:** 10px uppercase, amber background at 15% opacity
+- **LIVE badge:** Success-type Badge component
+
+---
+
+## Token Naming
+
+Understanding the shorthand naming convention used throughout the codebase.
+
+### Color Tokens
+
+| Token           | Expansion              | Description                        |
+|-----------------|------------------------|------------------------------------|
+| `C.bg`          | Background             | Primary page background            |
+| `C.s1 / s2 / s3` | Surface 1-3          | Progressively darker surface layers |
+| `C.bd / bL`     | Border / Border Light  | Default and light border variants  |
+| `C.t1 / t2 / t3` | Text 1-3             | Primary, secondary, tertiary text  |
+| `C.ac`          | Accent                 | Primary accent (lavender)          |
+| `C.acB / acD`   | Accent Bg / Dark       | Accent at 6% and 25% opacity      |
+| `C.tl`          | Theme Lead             | Primary interactive color (purple) |
+| `C.tlB / tlD`   | Theme Bg / Dark        | Theme at 6% and 18% opacity       |
+| `C.gn / am / rd / bl` | Green / Amber / Red / Blue | Semantic status colors    |
+| `C.hr`          | Hero                   | Dark hero background               |
+
+### System Variables
+
+| Variable | Description                                    |
+|----------|------------------------------------------------|
+| `FT`     | Font family (`'Outfit', system-ui, sans-serif`) |
+| `GRAD`   | Primary gradient (lavender-to-blue, 135deg)    |
+| `CSS`    | Global stylesheet (animations, resets, scrollbar) |
+| `NAV`    | Navigation structure (7 sections, 15 screens)  |
+| `SL`     | Screen labels map                              |
+| `SD`     | Screen descriptions map                        |
+
+### Naming Conventions
+
+```
+Backgrounds:  bg, s1, s2, s3  (bg = lightest, s3 = darkest)
+Text:         t1, t2, t3       (t1 = highest contrast, t3 = lowest)
+Borders:      bd (default), bL (light)
+Accent:       ac (base), acB (background/6%), acD (dark/25%)
+Theme:        tl (base), tlB (background/6%), tlD (dark/18%)
+Semantic:     gn (green), am (amber), rd (red), bl (blue)
+Special:      hr (hero dark)
+
+Opacity suffixes: +'15' = 15% overlay, +'08' = 8% tint
+```
 
 ---
 
@@ -521,6 +605,53 @@ Elements: 3 curved paths + 2 endpoint circles
 
 ---
 
+## Data Visualization
+
+Chart patterns and data display components used across Analytics, Team, and KPI screens.
+
+### Horizontal Bar Chart
+
+Used for team adoption rates, feature adoption, and any percentage-based metric.
+
+```
+Structure:  Avatar + Label + Bar Track + Percentage
+Bar Track:  height 6-8px, background C.s2, borderRadius 3-4px
+Bar Fill:   semantic color by threshold, borderRadius matching track
+Transition: width .8s cubic-bezier(.4,0,.2,1)
+```
+
+### Color Thresholds
+
+| Range    | Color  | Meaning                  |
+|----------|--------|--------------------------|
+| 90-100%  | `C.gn` | Success — on track       |
+| 75-89%   | `C.tl` | Good — theme accent      |
+| 60-74%   | `C.am` | Warning — needs attention |
+| 0-59%    | `C.rd` | Critical — intervention  |
+
+### KPI Trends
+
+KPI components support trend indicators in the `sub` text:
+
+```
+▲ prefix: positive trend (green context)
+▼ prefix: negative trend (red context)
+Steady:   neutral phrasing
+```
+
+### Avatar + Bar Combo
+
+Team adoption views pair an Avatar component with a horizontal bar:
+
+```
+┌──────────────────────────────────────────┐
+│ [AV] Name    ████████████░░░░░░░  85%    │
+│ [AV] Name    ██████░░░░░░░░░░░░░  60%    │
+└──────────────────────────────────────────┘
+```
+
+---
+
 ## Motion Design
 
 ### CSS Transitions
@@ -632,6 +763,86 @@ Every section needs exactly one h1-equivalent, supporting body text, and tertiar
 
 ### Copilot panel is always 300px
 The AI copilot sidebar is fixed-width and right-aligned. Do not vary this across screens.
+
+---
+
+## Do's & Don'ts
+
+Per-component guidance for consistent implementation across all screens.
+
+### Button
+
+**Do:**
+- Use Primary for the single main action per section
+- Use Active state for current selection in nav groups
+- Use sm size for inline actions in cards and table rows
+- Keep labels concise: 1-3 words
+
+**Don't:**
+- Don't place more than one primary-styled button per section
+- Don't mix sm and regular buttons in the same row
+- Don't use buttons inside clickable cards — the card itself is the target
+
+### Badge
+
+**Do:**
+- Map types to semantics consistently: critical=urgent, warning=attention, success=live, info=metadata
+- Place badges inline near the item they describe
+- Keep text to 1-2 words, always uppercase
+
+**Don't:**
+- Don't stack more than 2 badges on a single item
+- Don't use badges for actions — use buttons instead
+- Don't create custom badge colors outside the 6 defined types
+
+### Card
+
+**Do:**
+- Use anim prop for cards entering the viewport
+- Use bc prop with C.acD for highlighted/accent cards
+- Add left-accent border (3px C.tl) for detail/drill-down panels
+- Combine with KPIs, badges, and timelines inside
+
+**Don't:**
+- Don't nest cards inside other cards
+- Don't use shadows on cards in default state — shadows are for hover/active
+- Don't split semantically related content across separate cards
+
+### KPI
+
+**Do:**
+- Place KPIs in horizontal rows of 3-4
+- Include trend indicators (sub text) when data supports it
+- Use as entry points that lead to detail views
+
+**Don't:**
+- Don't show more than 4 KPIs in a single row
+- Don't use KPIs for non-numeric information
+- Don't omit the label — every metric needs context
+
+### Color
+
+**Do:**
+- Use C.tl for all interactive/clickable elements
+- Use semantic colors only for status: gn=success, am=warning, rd=critical, bl=info
+- Use opacity suffixes (+'15', +'08') for tinted backgrounds
+
+**Don't:**
+- Don't use C.tl for static decorative text
+- Don't use C.ac and C.tl interchangeably — ac is decorative, tl is interactive
+- Don't introduce colors outside the defined palette
+
+### Motion
+
+**Do:**
+- Use .fu (fade-up) for all card/section entrance animations
+- Keep hover transitions at .2-.3s with cubic-bezier(.4,0,.2,1)
+- Stagger entrance delays by 80-100ms per item
+
+**Don't:**
+- Don't animate exit transitions — content should leave immediately
+- Don't mix timing functions arbitrarily across the same screen
+- Don't use animations longer than 2s for interactive feedback
 
 ---
 
