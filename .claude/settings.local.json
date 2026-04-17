@@ -4,7 +4,19 @@
       "Bash(git --version)",
       "Bash(gh --version)",
       "Bash(npm --version)",
-      "Bash(curl -s http://localhost:5181/)"
+      "Bash(curl -s http://localhost:5181/)",
+      "Bash(python3 -c \"import sys; content = sys.stdin.read\\(\\); print\\(content[:5000]\\)\")",
+      "Bash(npm run *)",
+      "Bash(open *)",
+      "Bash(python3 -c ' *)",
+      "Bash(node -e ' *)",
+      "Bash(npx vite *)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(curl -s http://localhost:5187)",
+      "Bash(python3)",
+      "Bash(sed -i '' 's/NorthStar v2 — Extracted and documented from the live application/Extracted and documented from the live application/g' HyperFlow.jsx)",
+      "Bash(sed -i '' 's/NorthStar\\\\/design-system.md file mirrors/design-system.md file mirrors/g' HyperFlow.jsx)",
+      "Bash(sed -i '' 's/NorthStar v2 app. Hover/HyperFlow app. Hover/g' HyperFlow.jsx)"
     ]
   }
 }
